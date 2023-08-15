@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Система лайков, дизлайков и комментариев</title>
+</head>
+<body>
+  <h1>Система лайков, дизлайков и комментариев</h1>
+
+  <div>
+    <h2>Пост 1</h2>
+    <button onclick="likePost(1)">Лайк</button>
+    <button onclick="dislikePost(1)">Дизлайк</button>
+    
+
+    <label for="commentInput">Комментарий:</label>
+    <input type="text" id="commentInput">
+    <button onclick="addComment(1, document.getElementById('commentInput').value)">Добавить комментарий</button>
+  </div>
+
+  <script>
+    // Получение поста по его ID
+    function getPost(id) {
+      return fetch(`http://localhost:3000/posts/${id}`)
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+    }
+
+    // Обновление поста в базе данных
+    function updatePost(id, data) {
+      return fetch(`http://localhost:3000/posts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .catch((error) => console.log(error));
+    }
+
+    // Лайк поста
+    function likePost(id) {
+      getPost(id)
+        .then((post) => {
+          post.likes++;
+          return updatePost(id, post);
+        })
+        .then((updatedPost) => console.log('Пост лайкнут', updatedPost))
+        .catch((error) => console.log(error));
+    }
+
+    // Дизлайк поста
+    function dislikePost(id) {
+      getPost(id)
+        .then((post) => {
+          post.dislikes++;
+          return updatePost(id, post);
+        })
+        .then((updatedPost) => console.log('Пост дизлайкнут', updatedPost))
+        .catch((error) => console.log(error));
+    }
+
+    // Комментирование поста
+    function addComment(id, comment) {
+      getPost(id)
+        .then((post) => {
+          post.comments.push(comment);
+          return updatePost(id, post);
+        })
+        .then((updatedPost) => console.log('Комментарий добавлен', updatedPost))
+        .catch((error) => console.log(error));
+    }
+  </script>
+</body>
+</html>

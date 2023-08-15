@@ -1,0 +1,13 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "text": "Пример поста",
+      "likes": 4,
+      "dislikes": 0,
+      "comments": [
+        "qwe"
+      ]
+    }
+  ]
+}
